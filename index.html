@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>인생네컷 만들기</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <h1>인생네컷 만들기</h1>
+    <p class="privacy">🔒 사진은 이 기기 밖으로 나가지 않아요</p>
+  </header>
+
+  <main>
+    <!-- ① 입력 방식 선택 -->
+    <section class="card" aria-labelledby="step1">
+      <h2 id="step1"><span class="num">1</span> 사진 넣기</h2>
+      <div class="mode-buttons">
+        <button type="button" class="big-btn mode-btn" id="modeCamera">📷 사진 찍기</button>
+        <button type="button" class="big-btn mode-btn" id="modeUpload">🖼️ 사진 올리기</button>
+      </div>
+
+      <div id="cameraPanel" class="panel" hidden>
+        <div class="video-box">
+          <video id="video" playsinline muted autoplay></video>
+          <div id="countdown" class="countdown" aria-live="assertive"></div>
+          <div id="flash" class="flash"></div>
+        </div>
+        <button type="button" class="big-btn primary" id="shootAll">▶ 촬영 시작 (4컷)</button>
+      </div>
+
+      <div id="uploadPanel" class="panel" hidden>
+        <button type="button" class="big-btn primary" id="pickFiles">사진 4장 고르기</button>
+        <input type="file" id="fileInput" accept="image/*" multiple hidden>
+        <input type="file" id="fileInputOne" accept="image/*" hidden>
+      </div>
+
+      <p id="message" class="message" role="status" aria-live="polite">어떻게 사진을 넣을지 골라 주세요.</p>
+
+      <div id="retakeRow" class="retake-row" hidden>
+        <button type="button" class="retake-btn" data-index="0"></button>
+        <button type="button" class="retake-btn" data-index="1"></button>
+        <button type="button" class="retake-btn" data-index="2"></button>
+        <button type="button" class="retake-btn" data-index="3"></button>
+      </div>
+    </section>
+
+    <!-- ② 프레임 미리보기 -->
+    <section class="card preview-card" aria-labelledby="step2">
+      <h2 id="step2"><span class="num">2</span> 미리보기</h2>
+      <canvas id="preview" aria-label="인생네컷 미리보기"></canvas>
+      <p class="hint">스티커는 손가락이나 마우스로 끌어서 옮겨요.</p>
+    </section>
+
+    <!-- ③ 꾸미기 탭 -->
+    <section class="card" aria-labelledby="step3">
+      <h2 id="step3"><span class="num">3</span> 꾸미기</h2>
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" class="tab" id="tab-frame" aria-controls="panel-frame" aria-selected="true">프레임</button>
+        <button type="button" role="tab" class="tab" id="tab-sticker" aria-controls="panel-sticker" aria-selected="false">스티커</button>
+        <button type="button" role="tab" class="tab" id="tab-text" aria-controls="panel-text" aria-selected="false">문구</button>
+      </div>
+
+      <div role="tabpanel" id="panel-frame" class="tab-panel" aria-labelledby="tab-frame">
+        <div id="frameList" class="frame-list"></div>
+      </div>
+
+      <div role="tabpanel" id="panel-sticker" class="tab-panel" aria-labelledby="tab-sticker" hidden>
+        <p class="hint">스티커를 누르면 사진에 붙어요.</p>
+        <div id="stickerList" class="sticker-list"></div>
+        <div class="sticker-tools">
+          <label for="sizeRange" class="tool-label">크기</label>
+          <input type="range" id="sizeRange" min="50" max="300" step="5" value="120" disabled>
+          <button type="button" class="big-btn danger" id="deleteSticker" disabled>🗑️ 지우기</button>
+        </div>
+        <p class="hint" id="stickerHint">붙인 스티커를 눌러서 고르면 크기를 바꾸거나 지울 수 있어요.</p>
+      </div>
+
+      <div role="tabpanel" id="panel-text" class="tab-panel" aria-labelledby="tab-text" hidden>
+        <label for="textInput" class="tool-label">아래에 쓸 말</label>
+        <input type="text" id="textInput" maxlength="16" value="인생 네컷" autocomplete="off">
+        <label class="check">
+          <input type="checkbox" id="dateToggle" checked>
+          <span>날짜 넣기</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- ④ 저장 -->
+    <section class="card save-card">
+      <button type="button" class="big-btn primary" id="saveBtn">💾 PNG 저장</button>
+      <button type="button" class="big-btn" id="qrBtn">🔗 QR 공유</button>
+    </section>
+  </main>
+
+  <dialog id="qrDialog" class="qr-dialog" aria-labelledby="qrTitle">
+    <h2 id="qrTitle">친구도 이 앱을 열어요</h2>
+    <div id="qrBox" class="qr-box"></div>
+    <p id="qrUrl" class="qr-url"></p>
+    <p id="qrNote" class="qr-note"></p>
+    <p class="qr-note">QR에는 앱 주소만 들어 있어요. 내 사진은 보내지 않아요.</p>
+    <button type="button" class="big-btn" id="qrClose">닫기</button>
+  </dialog>
+
+  <script src="vendor/qrcode.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
